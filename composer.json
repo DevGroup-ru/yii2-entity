@@ -1,0 +1,27 @@
+{
+    "name": "devgroup/yii2-entity",
+    "description": "Yii2 entity",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","entity","active-record","ar"],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Pavel Fedotov",
+            "email": "fps.06@mail.ru"
+        },
+	{
+            "name": "Alexander Kozhevnikov",
+            "email": "b37hr3z3n@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "yiisoft/yii2": "~2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DevGroup\\Entity\\": "src/"
+        }
+    }
+}
