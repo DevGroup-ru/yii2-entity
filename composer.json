@@ -10,7 +10,7 @@
             "name": "Pavel Fedotov",
             "email": "fps.06@mail.ru"
         },
-	{
+        {
             "name": "Alexander Kozhevnikov",
             "email": "b37hr3z3n@gmail.com"
         }
@@ -23,5 +23,9 @@
         "psr-4": {
             "DevGroup\\Entity\\": "src/"
         }
+    },
+    "require-dev": {
+        "yiisoft/yii2-codeception": "~2.0.0",
+        "codeception/codeception": "^2.2"
     }
 }
