@@ -1,6 +1,8 @@
 Yii2 entity
 ===========
 
+[![Build Status](https://travis-ci.org/DevGroup-ru/yii2-entity.svg?branch=master)](https://travis-ci.org/DevGroup-ru/yii2-entity)
+
 Installation
 ------------
 
