@@ -42,6 +42,20 @@ trait EntityTrait
     }
 
     /**
+     * Call trait event methods.
+     * @param string $eventName
+     */
+    protected function callEvents($eventName)
+    {
+        foreach (static::getTraits() as $name) {
+            if ($name === 'EntityTrait') {
+                continue;
+            }
+            $this->callTraitMethod($name, $eventName);
+        }
+    }
+
+    /**
      * Get all model rules.
      * This method merges a model rules (it must consists in $model->rules) with rules of all used traits (it must be defined as `public function TraitnameRules`).
      * @return array
@@ -96,12 +110,7 @@ trait EntityTrait
                 'basePath' => '@vendor/devgroup/yii2-entity/src/messages',
             ];
         }
-        foreach (static::getTraits() as $name) {
-            if ($name === 'EntityTrait') {
-                continue;
-            }
-            $this->callTraitMethod($name, 'Init');
-        }
+        $this->callEvents('Init');
     }
 
     public function init()

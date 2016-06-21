@@ -3,6 +3,7 @@
 namespace DevGroup\Entity\tests;
 
 use tests\models\Page;
+use tests\models\Slide;
 
 class EntityTraitTest extends \yii\codeception\TestCase
 {
@@ -61,6 +62,16 @@ class EntityTraitTest extends \yii\codeception\TestCase
         $page->save();
         $this->assertSame(5, $page->created_by);
         $this->assertNull($page->updated_by);
+        // custom field
+        $fail = false;
+        $slide = new Slide;
+        $slide->src = '/path/to/file.jpg';
+        try {
+            $slide->save();
+        } catch (\Exception $e) {
+            $fail = true;
+        }
+        $this->assertFalse($fail);
     }
 
     public function testSlugRule()

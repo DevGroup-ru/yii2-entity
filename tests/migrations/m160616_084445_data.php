@@ -1,6 +1,7 @@
 <?php
 
 use tests\models\Page;
+use tests\models\Slide;
 use yii\db\Migration;
 
 class m160616_084445_data extends Migration
@@ -24,10 +25,24 @@ class m160616_084445_data extends Migration
             ],
             ''
         );
+        $this->createTable(
+            Slide::tableName(),
+            [
+                'id' => $this->primaryKey(),
+                'src' => $this->string(255)->notNull(),
+                'alt' => $this->string(255),
+                'description' => $this->text(),
+                'updated_by' => $this->integer(),
+                'create_time' => $this->integer()->notNull(),
+                'update_time' => $this->integer()->notNull(),
+            ],
+            ''
+        );
     }
 
     public function down()
     {
+        $this->dropTable(Slide::tableName());
         $this->dropTable(Page::tableName());
     }
 }
