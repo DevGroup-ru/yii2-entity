@@ -2,6 +2,7 @@
 
 namespace DevGroup\Entity\traits;
 
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
 
@@ -13,6 +14,7 @@ trait EntityTrait
 {
     protected static $traitsList = [];
     protected static $rulesList = [];
+    protected static $attributeLabelsList = [];
 
     protected static function getTraits()
     {
@@ -42,7 +44,7 @@ trait EntityTrait
     /**
      * Get all model rules.
      * This method merges a model rules (it must consists in $model->rules) with rules of all used traits (it must be defined as `public function TraitnameRules`).
-     * @return mixed
+     * @return array
      */
     public function rules()
     {
@@ -62,8 +64,38 @@ trait EntityTrait
         return static::$rulesList[static::class];
     }
 
+    /**
+     * Get all attribute labels.
+     * This method merges a model attributeLabels with attribute labels of all used traits.
+     * @return array
+     */
+    public function attributeLabels()
+    {
+        if (isset(static::$attributeLabelsList[static::class]) === false) {
+            static::$attributeLabelsList[static::class] = isset($this->attributeLabels) === true
+                ? $this->attributeLabels
+                : [];
+            foreach (static::getTraits() as $name) {
+                if (null !== $attributeLabels = $this->callTraitMethod($name, 'AttributeLabels')) {
+                    static::$attributeLabelsList[static::class] = ArrayHelper::merge(
+                        static::$attributeLabelsList[static::class],
+                        $attributeLabels
+                    );
+                }
+            }
+        }
+        return static::$attributeLabelsList[static::class];
+    }
+
     public function EntityTraitInit()
     {
+        if (isset(Yii::$app->i18n->translations['entity']) === false) {
+            Yii::$app->i18n->translations['entity'] = [
+                'class' => \yii\i18n\PhpMessageSource::class,
+                'sourceLanguage' => 'en-US',
+                'basePath' => '@vendor/devgroup/yii2-entity/src/messages',
+            ];
+        }
         foreach (static::getTraits() as $name) {
             if ($name === 'EntityTrait') {
                 continue;

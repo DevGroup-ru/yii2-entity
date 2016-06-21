@@ -18,6 +18,10 @@ class Page extends ActiveRecord
         ['url', 'required'],
     ];
 
+    protected $attributeLabels = [
+        'url' => 'Page url',
+    ];
+
     public static function tableName()
     {
         return 'page';

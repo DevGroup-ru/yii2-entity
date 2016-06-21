@@ -62,4 +62,15 @@ class EntityTraitTest extends \yii\codeception\TestCase
         $this->assertSame(5, $page->created_by);
         $this->assertNull($page->updated_by);
     }
+
+    public function testTranslations()
+    {
+        $page = new Page;
+        // test a default
+        $this->assertSame('Page url', $page->getAttributeLabel('url'));
+        // test merged labels
+        $this->assertSame(5, count($page->attributeLabels()));
+        // test a ru translation
+        $this->assertSame('Заголовок', $page->getAttributeLabel('title'));
+    }
 }
