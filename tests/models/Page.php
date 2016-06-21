@@ -26,4 +26,10 @@ class Page extends ActiveRecord
     {
         return 'page';
     }
+
+    public function beforeValidate()
+    {
+        $this->url = empty($this->slug) === false ? '/' . $this->slug : '';
+        return parent::beforeValidate();
+    }
 }

@@ -12,6 +12,7 @@ class m160616_084445_data extends Migration
             [
                 'id' => $this->primaryKey(),
                 'url' => $this->string(255)->notNull(),
+                'slug' => $this->string(80)->notNull(),
                 'title' => $this->string(255),
                 'h1' => $this->string(255),
                 'breadcrumbs_label' => $this->string(255),
