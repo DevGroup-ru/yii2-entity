@@ -4,12 +4,14 @@ namespace tests\models;
 
 use DevGroup\Entity\traits\BaseActionsInfoTrait;
 use DevGroup\Entity\traits\EntityTrait;
+use DevGroup\Entity\traits\SoftDeleteTrait;
 use yii\db\ActiveRecord;
 
 class Slide extends ActiveRecord
 {
     use EntityTrait;
     use BaseActionsInfoTrait;
+    use SoftDeleteTrait;
 
     public $blameableAttributes = [
         ActiveRecord::EVENT_BEFORE_INSERT => ['updated_by'],

@@ -22,6 +22,7 @@ class m160616_084445_data extends Migration
                 'updated_by' => $this->integer(),
                 'created_at' => $this->integer()->notNull(),
                 'updated_at' => $this->integer()->notNull(),
+                'deleted' => $this->integer()->notNull()->defaultValue(0),
             ],
             ''
         );
@@ -35,6 +36,7 @@ class m160616_084445_data extends Migration
                 'updated_by' => $this->integer(),
                 'create_time' => $this->integer()->notNull(),
                 'update_time' => $this->integer()->notNull(),
+                'is_deleted' => $this->integer()->notNull()->defaultValue(0),
             ],
             ''
         );

@@ -108,4 +108,41 @@ class EntityTraitTest extends \yii\codeception\TestCase
         // test a ru translation
         $this->assertSame('Заголовок', $page->getAttributeLabel('title'));
     }
+
+    public function testSoftDelete()
+    {
+        $slide = new Slide;
+        $slide->loadDefaultValues();
+        $slide->src = '/path/to/file.webp';
+        $slide->save();
+        // check a default value
+        $this->assertSame(0, $slide->is_deleted);
+        $slidesCount = Slide::find()->count();
+        $slide->delete();
+        // check value
+        $this->assertSame(1, $slide->is_deleted);
+        // check count
+        $this->assertSame($slidesCount, Slide::find()->count());
+        // a repeated check
+        $slide->delete();
+        $this->assertSame(1, $slide->is_deleted);
+        $this->assertSame($slidesCount, Slide::find()->count());
+        // check restoring
+        $this->assertTrue($slide->restore());
+        $this->assertSame(0, $slide->is_deleted);
+        // a repeated check
+        $this->assertTrue($slide->restore());
+        $this->assertSame(0, $slide->is_deleted);
+        // a hard delete check
+        $this->assertSame(1, $slide->hardDelete());
+        $this->assertTrue($slidesCount == Slide::find()->count() + 1);
+        // test custom attribute name
+        $page = new Page;
+        $page->loadDefaultValues();
+        $page->slug = 'just-a-test';
+        $page->save();
+        $this->assertSame(0, $page->deleted);
+        $page->delete();
+        $this->assertSame(1, $page->deleted);
+    }
 }
