@@ -107,7 +107,7 @@ trait EntityTrait
             Yii::$app->i18n->translations['entity'] = [
                 'class' => \yii\i18n\PhpMessageSource::class,
                 'sourceLanguage' => 'en-US',
-                'basePath' => '@vendor/devgroup/yii2-entity/src/messages',
+                'basePath' => '@DevGroup/Entity/messages',
             ];
         }
         $this->callEvents('Init');
