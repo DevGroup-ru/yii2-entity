@@ -37,56 +37,106 @@ use yii\db\ActiveRecord;
  */
 trait BaseActionsInfoTrait
 {
+    /**
+     * @var bool whether to use a Blameable behavior
+     */
+    public $useBlameable = true;
+
+    /**
+     * @var bool whether to use a Timestamp behavior
+     */
+    public $useTimestamp = true;
+
+    /**
+     * Get default attributes for Blameable behavior.
+     * If you need to set a custom attributes, just add a `blameableAttributes` field to your model.
+     * @return array
+     */
     protected function getBlameableAttributes()
     {
         return [];
     }
 
+    /**
+     * Get default value of createdByAttribute for Blameable behavior.
+     * If you need to set a custom name of attribute, just add a `createdByAttribute` field to your model.
+     * @return array
+     */
     protected function getCreatedByAttribute()
     {
         return 'created_by';
     }
 
+    /**
+     * Get default value of updatedByAttribute for Blameable behavior.
+     * If you need to set a custom name of attribute, just add an `updatedByAttribute` field to your model.
+     * @return array
+     */
     protected function getUpdatedByAttribute()
     {
         return 'updated_by';
     }
 
+    /**
+     * Get default attributes for Timestamp behavior.
+     * If you need to set a custom attributes, just add a `timestampAttributes` field to your model.
+     * @return array
+     */
     protected function getTimestampAttributes()
     {
         return [];
     }
 
+    /**
+     * Get default value of createdAtAttribute for Timestamp behavior.
+     * If you need to set a custom name of attribute, just add an `createdAtAttribute` field to your model.
+     * @return array
+     */
     protected function getCreatedAtAttribute()
     {
         return 'created_at';
     }
 
+    /**
+     * Get default value of updatedAtAttribute for Timestamp behavior.
+     * If you need to set a custom name of attribute, just add an `updatedAtAttribute` field to your model.
+     * @return array
+     */
     protected function getUpdatedAtAttribute()
     {
         return 'updated_at';
     }
 
+    /**
+     * Init a trait.
+     * There is an event attaching here.
+     */
     public function BaseActionsInfoTraitInit()
     {
-        /** @var ActiveRecord $this */
-        $this->attachBehavior(
-            'blameable',
-            [
-                'class' => BlameableBehavior::class,
-                'attributes' => $this->blameableAttributes,
-                'createdByAttribute' => $this->createdByAttribute,
-                'updatedByAttribute' => $this->updatedByAttribute,
-            ]
-        );
-        $this->attachBehavior(
-            'timestamp',
-            [
-                'class' => TimestampBehavior::class,
-                'attributes' => $this->timestampAttributes,
-                'createdAtAttribute' => $this->createdAtAttribute,
-                'updatedAtAttribute' => $this->updatedAtAttribute,
-            ]
-        );
+        /** @var ActiveRecord|self $this */
+        if ($this->useBlameable) {
+            $this->attachBehavior(
+                'blameable',
+                [
+                    'class' => BlameableBehavior::class,
+                    'attributes' => $this->blameableAttributes,
+                    'createdByAttribute' => $this->createdByAttribute,
+                    'updatedByAttribute' => $this->updatedByAttribute,
+                    // @todo add value attribute
+                ]
+            );
+        }
+        if ($this->useTimestamp) {
+            $this->attachBehavior(
+                'timestamp',
+                [
+                    'class' => TimestampBehavior::class,
+                    'attributes' => $this->timestampAttributes,
+                    'createdAtAttribute' => $this->createdAtAttribute,
+                    'updatedAtAttribute' => $this->updatedAtAttribute,
+                    // @todo add value attribute
+                ]
+            );
+        }
     }
 }
