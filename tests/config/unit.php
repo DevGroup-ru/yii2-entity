@@ -19,14 +19,5 @@ return [
             'class' => \tests\components\TestUser::class,
             'identityClass' => \yii\web\IdentityInterface::class,
         ],
-        'i18n' => [
-            'translations' => [
-                'entity' => [
-                    'class' => \yii\i18n\PhpMessageSource::class,
-                    'sourceLanguage' => 'en-US',
-                    'basePath' => __DIR__ . '/../../src/messages',
-                ],
-            ],
-        ],
     ]
 ];
