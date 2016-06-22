@@ -12,10 +12,25 @@ use yii\helpers\StringHelper;
  */
 trait EntityTrait
 {
+    /**
+     * @var array of trait names by model class name
+     */
     protected static $traitsList = [];
+
+    /**
+     * @var array of rules by model class name
+     */
     protected static $rulesList = [];
+
+    /**
+     * @var array of attribute labels by model class name
+     */
     protected static $attributeLabelsList = [];
 
+    /**
+     * Get all traits that uses for model
+     * @return mixed
+     */
     protected static function getTraits()
     {
         if (isset(static::$traitsList[static::class]) === false) {
@@ -101,6 +116,10 @@ trait EntityTrait
         return static::$attributeLabelsList[static::class];
     }
 
+    /**
+     * Init traits.
+     * This method register a translation and call init methods of all uses traits.
+     */
     public function EntityTraitInit()
     {
         if (isset(Yii::$app->i18n->translations['entity']) === false) {
@@ -113,6 +132,9 @@ trait EntityTrait
         $this->callEvents('Init');
     }
 
+    /**
+     * Trait initialisation.
+     */
     public function init()
     {
         parent::init();
