@@ -9,6 +9,7 @@ use yii\db\ActiveRecord;
 /**
  * Class BaseActionsInfoTrait
  * This trait attaches a timeatamp and a blameable behaviors.
+ *
  * @property array $blameableAttributes array list of attributes that are to be automatically filled with the value specified via [[value]].
  * The array keys are the ActiveRecord events upon which the attributes are to be updated,
  * and the array values are the corresponding attribute(s) to be updated. You can use a string to represent
@@ -20,6 +21,7 @@ use yii\db\ActiveRecord;
  *     ActiveRecord::EVENT_BEFORE_UPDATE => 'attribute2',
  * ]
  * ```
+ *
  * @property array $timestampAttributes array list of attributes that are to be automatically filled with the value specified via [[value]].
  * The array keys are the ActiveRecord events upon which the attributes are to be updated,
  * and the array values are the corresponding attribute(s) to be updated. You can use a string to represent
@@ -35,6 +37,35 @@ use yii\db\ActiveRecord;
  */
 trait BaseActionsInfoTrait
 {
+    protected function getBlameableAttributes()
+    {
+        return [];
+    }
+
+    protected function getCreatedByAttribute()
+    {
+        return 'created_by';
+    }
+
+    protected function getUpdatedByAttribute()
+    {
+        return 'updated_by';
+    }
+
+    protected function getTimestampAttributes()
+    {
+        return [];
+    }
+
+    protected function getCreatedAtAttribute()
+    {
+        return 'created_at';
+    }
+
+    protected function getUpdatedAtAttribute()
+    {
+        return 'updated_at';
+    }
 
     public function BaseActionsInfoTraitInit()
     {
@@ -43,18 +74,18 @@ trait BaseActionsInfoTrait
             'blameable',
             [
                 'class' => BlameableBehavior::class,
-                'attributes' => isset($this->blameableAttributes) ? $this->blameableAttributes : [],
-                'createdByAttribute' => isset($this->createdByAttribute) ? $this->createdByAttribute : 'created_by',
-                'updatedByAttribute' => isset($this->updatedByAttribute) ? $this->updatedByAttribute : 'updated_by',
+                'attributes' => $this->blameableAttributes,
+                'createdByAttribute' => $this->createdByAttribute,
+                'updatedByAttribute' => $this->updatedByAttribute,
             ]
         );
         $this->attachBehavior(
             'timestamp',
             [
                 'class' => TimestampBehavior::class,
-                'attributes' => isset($this->timestampAttributes) ? $this->timestampAttributes : [],
-                'createdAtAttribute' => isset($this->createdAtAttribute) ? $this->createdAtAttribute : 'created_at',
-                'updatedAtAttribute' => isset($this->updatedAtAttribute) ? $this->updatedAtAttribute : 'updated_at',
+                'attributes' => $this->timestampAttributes,
+                'createdAtAttribute' => $this->createdAtAttribute,
+                'updatedAtAttribute' => $this->updatedAtAttribute,
             ]
         );
     }
