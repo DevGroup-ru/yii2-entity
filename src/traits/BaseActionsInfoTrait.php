@@ -2,8 +2,9 @@
 
 namespace DevGroup\Entity\traits;
 
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
+use Closure;
+use Yii;
+use yii\base\Event;
 use yii\db\ActiveRecord;
 
 /**
@@ -38,14 +39,21 @@ use yii\db\ActiveRecord;
 trait BaseActionsInfoTrait
 {
     /**
-     * @var bool whether to use a Blameable behavior
+     * @var boolean whether to skip this behavior when the `$owner` has not been
+     * modified
+     * @since 2.0.8
+     * In case, when the property is `null`, the value of `Yii::$app->user->id` will be used as the value.
      */
-    public $useBlameable = true;
+    public $blameableValue;
 
     /**
-     * @var bool whether to use a Timestamp behavior
+     * @var boolean whether to skip this behavior when the `$owner` has not been
+     * modified
+     * @since 2.0.8
+     * In case, when the value is `null`, the result of the PHP function [time()](http://php.net/manual/en/function.time.php)
+     * will be used as value.
      */
-    public $useTimestamp = true;
+    public $timestampValue;
 
     /**
      * Get default attributes for Blameable behavior.
@@ -54,7 +62,10 @@ trait BaseActionsInfoTrait
      */
     protected function getBlameableAttributes()
     {
-        return [];
+        return [
+            ActiveRecord::EVENT_BEFORE_INSERT => [$this->createdByAttribute, $this->updatedByAttribute],
+            ActiveRecord::EVENT_BEFORE_UPDATE => $this->updatedByAttribute,
+        ];
     }
 
     /**
@@ -84,7 +95,10 @@ trait BaseActionsInfoTrait
      */
     protected function getTimestampAttributes()
     {
-        return [];
+        return [
+            ActiveRecord::EVENT_BEFORE_INSERT => [$this->createdAtAttribute, $this->updatedAtAttribute],
+            ActiveRecord::EVENT_BEFORE_UPDATE => $this->updatedAtAttribute,
+        ];
     }
 
     /**
@@ -107,6 +121,55 @@ trait BaseActionsInfoTrait
         return 'updated_at';
     }
 
+
+    protected function getValueInternal($event, $attributeName)
+    {
+        if ($this->$attributeName instanceof Closure || is_array($this->$attributeName) && is_callable($this->$attributeName)) {
+            return call_user_func($this->$attributeName, $event);
+        }
+        return $this->$attributeName;
+    }
+
+    protected function getBlameableValue($event)
+    {
+        if ($this->blameableValue === null) {
+            $user = Yii::$app->get('user', false);
+            return $user && !$user->isGuest ? $user->id : null;
+        }
+        return $this->getValueInternal($event, 'blameableValue');
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * In case, when the [[value]] is `null`, the result of the PHP function [time()](http://php.net/manual/en/function.time.php)
+     * will be used as value.
+     */
+    protected function getTimestampValue($event)
+    {
+        if ($this->timestampValue === null) {
+            return time();
+        }
+        return $this->getValueInternal($event, 'timestampValue');
+    }
+
+    /**
+     * Evaluates the attribute value and assigns it to the current attributes.
+     * @param Event $event
+     */
+    public function evaluateAttributesInternal($event)
+    {
+        if (empty($event->data['attributes']) === false) {
+            $methodName = $event->data['methodName'];
+            $value = $this->$methodName($event);
+            foreach ((array) $event->data['attributes'] as $attribute) {
+                if (is_string($attribute)) {
+                    $this->$attribute = $value;
+                }
+            }
+        }
+    }
+
     /**
      * Init a trait.
      * There is an event attaching here.
@@ -114,27 +177,23 @@ trait BaseActionsInfoTrait
     public function BaseActionsInfoTraitInit()
     {
         /** @var ActiveRecord|self $this */
-        if ($this->useBlameable) {
-            $this->attachBehavior(
-                'blameable',
+        foreach ($this->blameableAttributes as $eventName => $attributes) {
+            $this->on(
+                $eventName,
+                [$this, 'evaluateAttributesInternal'],
                 [
-                    'class' => BlameableBehavior::class,
-                    'attributes' => $this->blameableAttributes,
-                    'createdByAttribute' => $this->createdByAttribute,
-                    'updatedByAttribute' => $this->updatedByAttribute,
-                    // @todo add value attribute
+                    'attributes' => $attributes,
+                    'methodName' => 'getBlameableValue',
                 ]
             );
         }
-        if ($this->useTimestamp) {
-            $this->attachBehavior(
-                'timestamp',
+        foreach ($this->timestampAttributes as $eventName => $attributes) {
+            $this->on(
+                $eventName,
+                [$this, 'evaluateAttributesInternal'],
                 [
-                    'class' => TimestampBehavior::class,
-                    'attributes' => $this->timestampAttributes,
-                    'createdAtAttribute' => $this->createdAtAttribute,
-                    'updatedAtAttribute' => $this->updatedAtAttribute,
-                    // @todo add value attribute
+                    'attributes' => $attributes,
+                    'methodName' => 'getTimestampValue',
                 ]
             );
         }
