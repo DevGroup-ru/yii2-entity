@@ -35,16 +35,22 @@ trait SoftDeleteTrait
         /** @var ActiveRecord $this */
         $this->on(
             ActiveRecord::EVENT_BEFORE_DELETE,
-            function (ModelEvent $event) {
-                if ($event->sender->softMode === true) {
-                    if ($event->sender->{$event->sender->isDeletedAttribute} != 1) {
-                        $event->sender->{$event->sender->isDeletedAttribute} = 1;
-                        $event->sender->save(true, [$event->sender->isDeletedAttribute]);
-                    }
-                    $event->isValid = false;
-                }
-            }
+            [$this, 'SoftDeleteTraitInitHandler']
         );
+    }
+
+    /**
+     * @param ModelEvent $event
+     */
+    public function SoftDeleteTraitInitHandler(ModelEvent $event)
+    {
+        if ($event->sender->softMode === true) {
+            if ($event->sender->{$event->sender->isDeletedAttribute} != 1) {
+                $event->sender->{$event->sender->isDeletedAttribute} = 1;
+                $event->sender->save(true, [$event->sender->isDeletedAttribute]);
+            }
+            $event->isValid = false;
+        }
     }
 
     /**
