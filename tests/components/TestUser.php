@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: fps
- * Date: 16.06.16
- * Time: 13:52
- */
 
 namespace tests\components;
-
 
 use yii\web\User;
 
