@@ -133,11 +133,27 @@ trait EntityTrait
     }
 
     /**
+     * Clear rules and attribute labels for current class
+     */
+    public static function EntityTraitClear()
+    {
+        unset(static::$attributeLabelsList[static::class], static::$rulesList[static::class]);
+    }
+
+    /**
      * Trait initialisation.
      */
     public function init()
     {
         parent::init();
+        $this->EntityTraitInit();
+    }
+
+    /**
+     * Run an init method after unserializing
+     */
+    public function __wakeup()
+    {
         $this->EntityTraitInit();
     }
 }

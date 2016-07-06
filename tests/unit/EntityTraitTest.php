@@ -4,10 +4,12 @@ namespace DevGroup\Entity\tests;
 
 use tests\models\Page;
 use tests\models\Slide;
+use yii\db\ActiveRecord;
 
 class EntityTraitTest extends \yii\codeception\TestCase
 {
     public $appConfig = '@tests/config/unit.php';
+    protected $backupStaticAttributes = false;
 
     public function setUp()
     {
@@ -17,7 +19,7 @@ class EntityTraitTest extends \yii\codeception\TestCase
 
     public function tearDown()
     {
-        \Yii::$app->runAction('migrate/down', ['999999', 'migrationPath' => '@tests/migrations', 'interactive' => 0]);
+        \Yii::$app->runAction('migrate/down', ['all', 'migrationPath' => '@tests/migrations', 'interactive' => 0]);
         parent::tearDown();
     }
 
@@ -104,7 +106,7 @@ class EntityTraitTest extends \yii\codeception\TestCase
         // test a default
         $this->assertSame('Page url', $page->getAttributeLabel('url'));
         // test merged labels
-        $this->assertSame(6, count($page->attributeLabels()));
+        $this->assertSame(7, count($page->attributeLabels()));
         // test a ru translation
         $this->assertSame('Заголовок', $page->getAttributeLabel('title'));
     }
@@ -144,5 +146,21 @@ class EntityTraitTest extends \yii\codeception\TestCase
         $this->assertSame(0, $page->deleted);
         $page->delete();
         $this->assertSame(1, $page->deleted);
+    }
+
+    public function testSleep()
+    {
+        $page = new Page;
+        $page->slug = 'timestamp';
+        $page->save();
+        \Yii::$app->cache->set('key4test', $page, 86400);
+    }
+
+    public function testWakeUp()
+    {
+        Page::EntityTraitClear();
+        /** @var Page $page */
+        $page = \Yii::$app->cache->get('key4test');
+        $this->assertSame('Заголовок', $page->getAttributeLabel('title'));
     }
 }

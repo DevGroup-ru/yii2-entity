@@ -9,6 +9,9 @@ return [
     'language' => 'ru',
     'bootstrap' => [],
     'components' => [
+        'cache' => [
+            'class' => \yii\caching\FileCache::class,
+        ],
         'db' => [
             'class' => \yii\db\Connection::class,
             'dsn' => 'mysql:host=localhost;dbname=yii2_entity',
