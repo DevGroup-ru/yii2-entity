@@ -4,6 +4,7 @@ namespace DevGroup\Entity\traits;
 
 use yii\db\ActiveRecord;
 use yii\base\ModelEvent;
+use Yii;
 
 /**
  * Class SoftDeleteTrait
@@ -35,8 +36,17 @@ trait SoftDeleteTrait
         /** @var ActiveRecord $this */
         $this->on(
             ActiveRecord::EVENT_BEFORE_DELETE,
-            [$this, 'SoftDeleteTraitInitHandler']
+            [$this, 'SoftDeleteTraitInitHandler'],
+            null,
+            false
         );
+    }
+
+    public function SoftDeleteTraitAttributeLabels()
+    {
+        return [
+            $this->getIsDeletedAttribute() => Yii::t('entity', 'Deleted'),
+        ];
     }
 
     /**
