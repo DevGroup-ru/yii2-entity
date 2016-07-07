@@ -104,4 +104,13 @@ trait SoftDeleteTrait
         }
         return true;
     }
+
+    /**
+     * Return Deleted Status
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return boolval($this->{$this->isDeletedAttribute});
+    }
 }
