@@ -70,6 +70,17 @@ trait EntityTrait
         }
     }
 
+    protected function initI18n()
+    {
+        if (isset(Yii::$app->i18n->translations['entity']) === false) {
+            Yii::$app->i18n->translations['entity'] = [
+                'class' => \yii\i18n\PhpMessageSource::class,
+                'sourceLanguage' => 'en-US',
+                'basePath' => '@DevGroup/Entity/messages',
+            ];
+        }
+    }
+
     /**
      * Get all model rules.
      * This method merges a model rules (it must consists in $model->rules) with rules of all used traits (it must be defined as `public function TraitnameRules`).
@@ -122,13 +133,7 @@ trait EntityTrait
      */
     public function EntityTraitInit()
     {
-        if (isset(Yii::$app->i18n->translations['entity']) === false) {
-            Yii::$app->i18n->translations['entity'] = [
-                'class' => \yii\i18n\PhpMessageSource::class,
-                'sourceLanguage' => 'en-US',
-                'basePath' => '@DevGroup/Entity/messages',
-            ];
-        }
+        $this->initI18n();
         $this->callEvents('Init');
     }
 
@@ -154,6 +159,6 @@ trait EntityTrait
      */
     public function __wakeup()
     {
-        $this->EntityTraitInit();
+        $this->initI18n();
     }
 }
