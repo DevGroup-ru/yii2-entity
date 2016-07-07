@@ -118,23 +118,23 @@ class EntityTraitTest extends \yii\codeception\TestCase
         $slide->src = '/path/to/file.webp';
         $slide->save();
         // check a default value
-        $this->assertSame(0, $slide->is_deleted);
+        $this->assertFalse($slide->is_deleted);
         $slidesCount = Slide::find()->count();
         $slide->delete();
         // check value
-        $this->assertSame(1, $slide->is_deleted);
+        $this->assertTrue($slide->is_deleted);
         // check count
         $this->assertSame($slidesCount, Slide::find()->count());
         // a repeated check
         $slide->delete();
-        $this->assertSame(1, $slide->is_deleted);
+        $this->assertTrue($slide->is_deleted);
         $this->assertSame($slidesCount, Slide::find()->count());
         // check restoring
         $this->assertTrue($slide->restore());
-        $this->assertSame(0, $slide->is_deleted);
+        $this->assertFalse($slide->is_deleted);
         // a repeated check
         $this->assertTrue($slide->restore());
-        $this->assertSame(0, $slide->is_deleted);
+        $this->assertFalse($slide->is_deleted);
         // a hard delete check
         $this->assertSame(1, $slide->hardDelete());
         $this->assertTrue($slidesCount == Slide::find()->count() + 1);
@@ -143,9 +143,9 @@ class EntityTraitTest extends \yii\codeception\TestCase
         $page->loadDefaultValues();
         $page->slug = 'just-a-test';
         $page->save();
-        $this->assertSame(0, $page->deleted);
+        $this->assertFalse($page->deleted);
         $page->delete();
-        $this->assertSame(1, $page->deleted);
+        $this->assertTrue($page->deleted);
     }
 
     public function testSleep()

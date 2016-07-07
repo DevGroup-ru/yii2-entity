@@ -8,6 +8,7 @@ use Yii;
 
 /**
  * Class SoftDeleteTrait
+ * @property string $isDeletedAttribute
  * @package DevGroup\Entity\traits
  */
 trait SoftDeleteTrait
@@ -42,10 +43,25 @@ trait SoftDeleteTrait
         );
     }
 
+    /**
+     * Get attribute labels list
+     * @return array attributes list
+     */
     public function SoftDeleteTraitAttributeLabels()
     {
         return [
-            $this->getIsDeletedAttribute() => Yii::t('entity', 'Deleted'),
+            $this->isDeletedAttribute => Yii::t('entity', 'Deleted'),
+        ];
+    }
+
+    /**
+     * Get trait rules
+     * @return array rules list
+     */
+    public function SoftDeleteTraitRules()
+    {
+        return [
+            [$this->isDeletedAttribute, 'filter', 'filter' => 'boolval'],
         ];
     }
 
@@ -55,8 +71,8 @@ trait SoftDeleteTrait
     public function SoftDeleteTraitInitHandler(ModelEvent $event)
     {
         if ($event->sender->softMode === true) {
-            if ($event->sender->{$event->sender->isDeletedAttribute} != 1) {
-                $event->sender->{$event->sender->isDeletedAttribute} = 1;
+            if ($event->sender->{$event->sender->isDeletedAttribute} != true) {
+                $event->sender->{$event->sender->isDeletedAttribute} = true;
                 $event->sender->save(true, [$event->sender->isDeletedAttribute]);
             }
             $event->isValid = false;
@@ -82,8 +98,8 @@ trait SoftDeleteTrait
     public function restore()
     {
         /** @var ActiveRecord $this */
-        if ($this->{$this->isDeletedAttribute} != 0) {
-            $this->{$this->isDeletedAttribute} = 0;
+        if ($this->{$this->isDeletedAttribute} != false) {
+            $this->{$this->isDeletedAttribute} = false;
             return $this->save(true, [$this->isDeletedAttribute]);
         }
         return true;
