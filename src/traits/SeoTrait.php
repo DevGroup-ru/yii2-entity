@@ -10,7 +10,7 @@ trait SeoTrait
     {
         return [
             [['title', 'h1', 'breadcrumbs_label', 'meta_description'], 'string', 'max' => 255],
-            ['slug', 'match', 'pattern' => '#^[A-Za-z\d-_]+$#'],
+            ['slug', 'match', 'pattern' => '#^[A-Za-z\d\-_~]+$#'],
             ['slug', 'string', 'max' => 80],
             ['slug', 'required'],
         ];
