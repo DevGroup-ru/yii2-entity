@@ -98,7 +98,7 @@ trait SoftDeleteTrait
     public function restore()
     {
         /** @var ActiveRecord $this */
-        if ($this->{$this->isDeletedAttribute} != false) {
+        if (((boolean) $this->{$this->isDeletedAttribute}) !== false) {
             $this->{$this->isDeletedAttribute} = false;
             return $this->save(true, [$this->isDeletedAttribute]);
         }
@@ -111,6 +111,6 @@ trait SoftDeleteTrait
      */
     public function isDeleted()
     {
-        return boolval($this->{$this->isDeletedAttribute});
+        return (boolean) $this->{$this->isDeletedAttribute};
     }
 }

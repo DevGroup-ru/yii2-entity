@@ -83,7 +83,9 @@ trait EntityTrait
 
     /**
      * Get all model rules.
-     * This method merges a model rules (it must consists in $model->rules) with rules of all used traits (it must be defined as `public function TraitnameRules`).
+     * This method merges a model rules (it must consists in $model->rules)
+     * with rules of all used traits (it must be defined as `public function TraitnameRules`).
+     *
      * @return array
      */
     public function rules()

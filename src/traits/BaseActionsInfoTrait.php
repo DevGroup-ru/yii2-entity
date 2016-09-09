@@ -9,7 +9,7 @@ use yii\db\ActiveRecord;
 
 /**
  * Class BaseActionsInfoTrait
- * This trait attaches a timeatamp and a blameable behaviors.
+ * This trait attaches a timestamp and a blameable behaviors.
  *
  * @property array $blameableAttributes array list of attributes that are to be automatically filled with the value specified via [[value]].
  * The array keys are the ActiveRecord events upon which the attributes are to be updated,
