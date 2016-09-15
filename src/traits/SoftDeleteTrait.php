@@ -73,7 +73,7 @@ trait SoftDeleteTrait
         if ($event->sender->softMode === true) {
             if ($event->sender->{$event->sender->isDeletedAttribute} != true) {
                 $event->sender->{$event->sender->isDeletedAttribute} = true;
-                $event->sender->save(true, [$event->sender->isDeletedAttribute]);
+                $event->sender->save(false, [$event->sender->isDeletedAttribute]);
             }
             $event->isValid = false;
         }
