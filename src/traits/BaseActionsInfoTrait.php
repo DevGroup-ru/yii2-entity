@@ -154,6 +154,20 @@ trait BaseActionsInfoTrait
     }
 
     /**
+     * Get trait attribute labels
+     * @return array
+     */
+    public function BaseActionsInfoTraitAttributeLabels()
+    {
+        return [
+            'created_at' => Yii::t('entity', 'Created at'),
+            'created_by' => Yii::t('entity', 'Created by'),
+            'updated_at' => Yii::t('entity', 'Updated at'),
+            'updated_by' => Yii::t('entity', 'Updated by'),
+        ];
+    }
+
+    /**
      * Evaluates the attribute value and assigns it to the current attributes.
      * @param Event $event
      */

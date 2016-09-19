@@ -16,7 +16,7 @@ return [
             'class' => \yii\db\Connection::class,
             'dsn' => 'mysql:host=localhost;dbname=yii2_entity',
             'username' => 'root',
-            'password' => '',
+            'password' => 'root',
         ],
         'user' => [
             'class' => \tests\components\TestUser::class,
