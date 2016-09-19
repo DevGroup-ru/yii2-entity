@@ -106,7 +106,7 @@ class EntityTraitTest extends \yii\codeception\TestCase
         // test a default
         $this->assertSame('Page url', $page->getAttributeLabel('url'));
         // test merged labels
-        $this->assertSame(7, count($page->attributeLabels()));
+        $this->assertSame(11, count($page->attributeLabels()));
         // test a ru translation
         $this->assertSame('Заголовок', $page->getAttributeLabel('title'));
     }
