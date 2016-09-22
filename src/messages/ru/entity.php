@@ -9,6 +9,6 @@ return [
     'Deleted' => 'Удален',
     'Created at' => 'Когда создан',
     'Created by' => 'Кем создан',
-    'Updated at' => 'Когда одновлен',
+    'Updated at' => 'Когда обновлен',
     'Updated by' => 'Кем обновлен',
 ];
