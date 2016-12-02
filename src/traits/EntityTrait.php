@@ -28,6 +28,11 @@ trait EntityTrait
     protected static $attributeLabelsList = [];
 
     /**
+     * @var array of attribute hints by model class name
+     */
+    protected static $attributeHintsList = [];
+
+    /**
      * Get all traits that uses for model
      * @return mixed
      */
@@ -127,6 +132,29 @@ trait EntityTrait
             }
         }
         return static::$attributeLabelsList[static::class];
+    }
+
+    /**
+     * Get all attribute hints.
+     * This method merges a model attributeHints with attribute hints of all used traits.
+     * @return array
+     */
+    public function attributeHints()
+    {
+        if (isset(static::$attributeHintsList[static::class]) === false) {
+            static::$attributeHintsList[static::class] = isset($this->attributeHints) === true
+                ? $this->attributeHints
+                : [];
+            foreach (static::getTraits() as $name) {
+                if (null !== $attributeHints = $this->callTraitMethod($name, 'AttributeHints')) {
+                    static::$attributeHintsList[static::class] = ArrayHelper::merge(
+                        static::$attributeHintsList[static::class],
+                        $attributeHints
+                    );
+                }
+            }
+        }
+        return static::$attributeHintsList[static::class];
     }
 
     /**
