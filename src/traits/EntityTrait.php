@@ -39,10 +39,14 @@ trait EntityTrait
     protected static function getTraits()
     {
         if (isset(static::$traitsList[static::class]) === false) {
+            $className = static::class;
             static::$traitsList[static::class] = [];
-            foreach (class_uses(static::class) as $value) {
-                static::$traitsList[static::class][$value] = StringHelper::basename($value);
-            }
+            do {
+                foreach (class_uses($className) as $value) {
+                    static::$traitsList[static::class][$value] = StringHelper::basename($value);
+                }
+                $className = get_parent_class($className);
+            } while ($className !== false);
         }
         return static::$traitsList[static::class];
     }
